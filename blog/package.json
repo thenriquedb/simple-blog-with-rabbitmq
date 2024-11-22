@@ -10,7 +10,9 @@
     "migrate:list": "yarn knex migrate:list",
     "migrate:make": "yarn knex migrate:make",
     "migrate:latest": "yarn knex migrate:latest",
-    "migrate:rollback": "yarn knex migrate:rollback"
+    "migrate:rollback": "yarn knex migrate:rollback",
+    "seed:run": "yarn knex seed:run",
+    "seed:make": "yarn knex seed:make"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.5",
