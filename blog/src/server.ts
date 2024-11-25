@@ -4,6 +4,7 @@ import { findArticle, findArticleSchema } from './controllers/find-article';
 import { listArticles } from './controllers/list-articles';
 import { findCategory, findACategorySchema } from './controllers/find-category';
 import { listCategories } from './controllers/list-categories';
+import { createUser, createUserSchema } from './controllers/create-user';
 
 const fastify = Fastify({ logger: false });
 
@@ -13,6 +14,8 @@ fastify.get('/article', listArticles);
 
 fastify.get('/category/:id', { schema: findACategorySchema }, findCategory);
 fastify.get('/category', listCategories);
+
+fastify.post('/user', { schema: createUserSchema }, createUser);
 
 (async () => {
   try {
