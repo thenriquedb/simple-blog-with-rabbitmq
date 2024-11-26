@@ -3,7 +3,7 @@ import { Category } from "../entities/Category";
 
 export class CategoryRepository {
   static async findAll(): Promise<Category[]> {
-    return knex('categories').select(['categories.id', 'categories.name']);
+    return knex('categories').select('*');
   }
 
   static async findById(id: number): Promise<Category> {
