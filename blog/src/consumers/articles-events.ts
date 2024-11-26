@@ -1,11 +1,9 @@
-import { RabbitMQ } from '../shared/rabbitMQ';
+import { getRabbitMQInstance } from '../shared/rabbitMQ';
 import { UserPreferenceData } from '../repositories/user-preference-repository';
 import { knex } from '../database/db';
-import env from '../constants/env';
 
 export async function articleEventsConsumer() {
-  const channel = new RabbitMQ(env.RABBITMQ_URL);
-  await channel.start();
+  const channel = await getRabbitMQInstance()
 
   channel.consume('client.events.article', async (message) => {
     if (message?.fields.routingKey.includes('created')) {
