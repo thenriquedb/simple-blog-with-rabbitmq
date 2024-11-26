@@ -2,13 +2,13 @@ import { knex } from "../database/db";
 import { Article } from "../entities/Article";
 
 export class ArticleRepository {
-  static async create(data: { title: string, content: string, category: string }): Promise<number[]> {
-    const { category, content, title } = data;
+  static async create(data: { title: string, content: string, categoryId: number }): Promise<number[]> {
+    const { categoryId, content, title } = data;
 
     return knex('articles').insert({
       title,
       content,
-      category
+      category_id: categoryId
     });
   }
 
