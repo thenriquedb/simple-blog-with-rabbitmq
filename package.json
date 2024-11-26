@@ -1,0 +1,15 @@
+{
+  "name": "notification-with-rabbitmq",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:thenriquedb/simple-blog-with-rabbitmq.git",
+  "author": "Thiago Domingues <thenrique2012@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "nx": "20.1.3"
+  }
+}

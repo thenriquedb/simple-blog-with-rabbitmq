@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest, FastifySchema } from "fastify"
 import { ArticleRepository } from '../repositories/article-repository'
-import { channel } from '../shared/rabbitMQ';
 import { CategoryRepository } from "../repositories/category-repository";
+import { getRabbitMQInstance } from "../shared/rabbitMQ";
 
 type ICreateArticleBody = {
   title: string;
@@ -39,6 +39,8 @@ export async function createArticle(request: FastifyRequest<{ Body: ICreateArtic
     content,
     categoryId,
   });
+
+  const channel = await getRabbitMQInstance();
 
   channel.publishInExchange(
     'articles',

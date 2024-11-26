@@ -1,3 +1,6 @@
 node_modules
 .env
-my-turbo
+
+
+.nx/cache
+.nx/workspace-data
