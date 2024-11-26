@@ -1,12 +1,10 @@
 import { WebSocket } from "@fastify/websocket";
 import { FastifyRequest } from "fastify";
-import { RabbitMQ } from "../shared/rabbitMQ";
+import { getRabbitMQInstance } from "../shared/rabbitMQ";
 import { NotificationRepository } from "../repositories/notification-repository";
-import env from "../constants/env";
 
 export async function getNotificationsRealTime(socket: WebSocket, _: FastifyRequest) {
-  const channel = new RabbitMQ(env.RABBITMQ_URL);
-  await channel.start();
+  const channel = await getRabbitMQInstance();
 
   channel.consume('client.notifications', async (consumeMessage) => {
     if (consumeMessage?.fields.routingKey.includes('new')) {
