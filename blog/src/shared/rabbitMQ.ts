@@ -1,4 +1,5 @@
-import ampqlib, { Channel, Connection, ConsumeMessage, Message } from 'amqplib';
+import ampqlib, { Channel, Connection, Options } from 'amqplib';
+import env from '../constants/env';
 
 export class RabbitMQ {
   private connection: Connection;
@@ -19,8 +20,14 @@ export class RabbitMQ {
     console.log(" [x] Sent %s", message);
   }
 
-  async publishInExchange(exchange: string, routingKey: string, message: string) {
-    return this.channel.publish(exchange, routingKey, Buffer.from(message))
+  async publishInExchange(exchange: string, routingKey: string, message: string, options?: Options.Publish) {
+    this.channel.assertExchange(
+      exchange,
+      'topic',
+      { durable: true }
+    );
+
+    return this.channel.publish(exchange, routingKey, Buffer.from(message), options)
   }
 
   async consume(queue: string, callback: (message: ampqlib.ConsumeMessage | null) => void) {
@@ -32,4 +39,15 @@ export class RabbitMQ {
       }
     });
   }
+}
+
+function getRabbitMQUrl(): string {
+  return `amqp://${env.RABBITMQ_USERNAME}:${env.RABBITMQ_PASSWORD}@${env.RABBITMQ_HOST}:${env.RABBITMQ_PORT}`;
+}
+
+export async function getRabbitMQInstance(): Promise<RabbitMQ> {
+  const url = getRabbitMQUrl();
+  const channel = new RabbitMQ(url);
+  await channel.start();
+  return channel;
 }
