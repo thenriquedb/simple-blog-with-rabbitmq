@@ -3,7 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "dev": "tsx src/server.ts"
+  },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.17",
     "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.5",
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.16"
   }
 }
