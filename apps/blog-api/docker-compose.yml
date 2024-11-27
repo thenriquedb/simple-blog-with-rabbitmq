@@ -2,7 +2,7 @@ version: '3.7'
 services:
   database:
     image: mysql:5.7
-    container_name: blog
+    container_name: blog-api-db
     restart: always
     ports:
       - 3306:3306
