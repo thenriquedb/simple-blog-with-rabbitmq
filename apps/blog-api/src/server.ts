@@ -36,7 +36,7 @@ fastify.register(async (app) => {
 (async () => {
   try {
     await fastify.listen({ port: 3000 });
-    articleEventsConsumer();
+    await articleEventsConsumer();
     console.log('Server listening at 3000')
   } catch (error) {
     console.log('error', error);

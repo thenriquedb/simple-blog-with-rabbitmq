@@ -54,7 +54,7 @@ export async function createArticle(request: FastifyRequest<{ Body: ICreateArtic
     {
       headers: {
         'x-match': 'any',
-        category_id: category.id
+        'x-category-id': category.id
       }
     }
   );

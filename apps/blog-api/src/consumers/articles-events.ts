@@ -9,7 +9,7 @@ export async function articleEventsConsumer() {
     if (message?.fields.routingKey.includes('created')) {
       const parsedContent = JSON.parse(message.content.toString());
       const articleTitle = parsedContent.title;
-      const categoryId = message?.properties?.headers?.category_id;
+      const categoryId = message?.properties?.headers?.['x-category-id'] as number;
 
       const stream = knex("user_preferences")
         .join("users", "users.id", "=", "user_preferences.user_id")
@@ -26,17 +26,24 @@ export async function articleEventsConsumer() {
         .stream();
 
       stream.on('data', async (row: UserPreferenceData) => {
-        await channel.publishInExchange('articles', 'client.mail.send', JSON.stringify({
-          email: row.userEmail,
-          subject: 'New article created',
-          body: `Hello ${row.userName}, how are you? A new article was published in the category ${row.categoryName}. The article is ${articleTitle}. Enjoy!`,
-        }));
+        await channel.publishInExchange(
+          'articles',
+          'client.email.ready',
+          JSON.stringify({
+            email: row.userEmail,
+            subject: 'New article created',
+            body: `Hello ${row.userName}, how are you? A new article was published in the category ${row.categoryName}. The article is ${articleTitle}. Enjoy!`,
+          }));
 
-        await channel.publishInExchange('articles', 'client.notifications.new', JSON.stringify({
-          userId: row.userId,
-          title: 'New article created',
-          message: `A new article was published in the category ${row.categoryName}!`,
-        }));
+        await channel.publishInExchange(
+          'articles',
+          'client.notifications.new',
+          JSON.stringify({
+            userId: row.userId,
+            title: 'New article created',
+            message: `A new article was published in the category ${row.categoryName}!`,
+          })
+        );
       });
     }
   });

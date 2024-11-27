@@ -17,6 +17,12 @@ export class UserPreferenceRepository {
     });
   }
 
+  static findByUserIdAndCategoryId(userId: number, categoryId: number) {
+    return knex("user_preferences")
+      .where({ user_id: userId, category_id: categoryId })
+      .first();
+  }
+
   static async getUserPreferencesByUserId(userId: number): Promise<UserPreferenceData[]> {
     return knex("user_preferences")
       .join("users", "users.id", "=", "user_preferences.user_id")
