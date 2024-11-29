@@ -30,17 +30,17 @@ export class RabbitMQ {
     return this.channel.publish(exchange, routingKey, Buffer.from(message), options)
   }
 
-  async consume(queue: string, callback: (message: ampqlib.ConsumeMessage | null) => void) {
+  async consume(queue: string, callback: (message: ampqlib.ConsumeMessage | null) => void, options?: Options.Consume) {
     return this.channel.consume(queue, (message) => {
       callback(message);
-    });
+    }, options);
   }
 
   ack(message: ampqlib.ConsumeMessage) {
     return this.channel.ack(message);
   }
 
-  nack(message: ampqlib.ConsumeMessage, requeue: boolean) {
+  nack(message: ampqlib.ConsumeMessage, requeue?: boolean) {
     this.channel.nack(message, false, requeue);
   }
 }
