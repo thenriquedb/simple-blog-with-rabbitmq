@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "dev:blog-api": "nx run blog-api:dev",
-    "dev:email": "nx run email:dev"
+    "dev:email-consumer": "nx run email:dev"
   },
   "workspaces": [
     "apps/*"
