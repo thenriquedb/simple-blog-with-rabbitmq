@@ -6,6 +6,10 @@
   "author": "Thiago Domingues <thenrique2012@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "dev:blog-api": "nx run blog-api:dev",
+    "dev:email": "nx run email:dev"
+  },
   "workspaces": [
     "apps/*"
   ],
