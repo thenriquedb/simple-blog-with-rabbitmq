@@ -10,6 +10,7 @@ import { createUser, createUserSchema } from './controllers/create-user';
 import { createUserPreference, createUserPreferenceSchema } from './controllers/create-user-preference';
 import { articleEventsConsumer } from './consumers/articles-events';
 import { getNotificationsRealTime } from './controllers/get-notifications-real-time';
+import { setupRabbitMQ } from './shared/rabbitMQ';
 
 const fastify = Fastify({ logger: false });
 fastify.register(websocket);
@@ -36,6 +37,7 @@ fastify.register(async (app) => {
 (async () => {
   try {
     await fastify.listen({ port: 3000 });
+    await setupRabbitMQ();
     await articleEventsConsumer();
     console.log('Server listening at 3000')
   } catch (error) {

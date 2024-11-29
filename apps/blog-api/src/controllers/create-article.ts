@@ -43,7 +43,7 @@ export async function createArticle(request: FastifyRequest<{ Body: ICreateArtic
   const channel = await getRabbitMQInstance();
 
   channel.publishInExchange(
-    'articles',
+    'ex.blog.articles',
     `events.article.created`,
     JSON.stringify({
       id: createdArticleId[0],

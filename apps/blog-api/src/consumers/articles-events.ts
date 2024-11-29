@@ -27,16 +27,17 @@ export async function articleEventsConsumer() {
 
       stream.on('data', async (row: UserPreferenceData) => {
         await channel.publishInExchange(
-          'articles',
-          'client.email.ready',
+          'ex.blog.email',
+          'blog.email.ready',
           JSON.stringify({
             email: row.userEmail,
             subject: 'New article created',
             body: `Hello ${row.userName}, how are you? A new article was published in the category ${row.categoryName}. The article is ${articleTitle}. Enjoy!`,
-          }));
+          }),
+        );
 
         await channel.publishInExchange(
-          'articles',
+          'ex.blog.notifications',
           'client.notifications.new',
           JSON.stringify({
             userId: row.userId,

@@ -39,6 +39,10 @@ export class RabbitMQ {
       }
     });
   }
+
+  getChannel(): Channel {
+    return this.channel;
+  }
 }
 
 function getRabbitMQUrl(): string {
@@ -50,4 +54,30 @@ export async function getRabbitMQInstance(): Promise<RabbitMQ> {
   const channel = new RabbitMQ(url);
   await channel.start();
   return channel;
+}
+
+export async function setupRabbitMQ() {
+  const channel = (await getRabbitMQInstance()).getChannel();
+
+  // Create exchanges
+  await channel.assertExchange('ex.blog.articles', 'topic', { durable: true });
+  await channel.assertExchange('ex.blog.email', 'topic', { durable: true });
+  await channel.assertExchange('dlx.blog.email', 'topic', { durable: true });
+  await channel.assertExchange('ex.blog.notifications', 'topic', { durable: true });
+
+  // Create queues
+  await channel.assertQueue('client.events.article', { durable: true });
+  await channel.assertQueue('client.notifications', { durable: true });
+  await channel.assertQueue('client.email.failed', { durable: true });
+  await channel.assertQueue('client.email', {
+    durable: true,
+    deadLetterExchange: 'dlx.blog.email',
+    deadLetterRoutingKey: 'client.email.failed',
+  });
+
+  // Bind queues
+  await channel.bindQueue('client.notifications', 'ex.blog.notifications', '*.notifications.*');
+  await channel.bindQueue('client.events.article', 'ex.blog.articles', '*.article.*');
+  await channel.bindQueue('client.email', 'ex.blog.email', '*.email.*');
+  await channel.bindQueue('client.email.failed', 'dlx.blog.email', '*.email.failed');
 }
