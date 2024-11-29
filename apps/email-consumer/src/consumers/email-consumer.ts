@@ -1,6 +1,5 @@
 import { transporter } from "../shared/nodemailer";
 import { getRabbitMQInstance } from "../shared/rabbitMQ";
-import { wait } from "../shared/wait";
 
 export async function emailConsumer() {
   const channel = await getRabbitMQInstance();
@@ -15,12 +14,12 @@ export async function emailConsumer() {
           from: process.env.NODEMAILER_SENDER_EMAIL,
           to: email,
           subject,
-          text: body
+          text: body,
         });
-        console.log('Email sent: ' + info.response);
         channel.ack(consumeMessage);
-        await wait(3000);
+        console.log('Email sent to ' + info.envelope.to);
       } catch (error) {
+        console.log('Error sending email', error);
         console.error('Error sending email', error.message);
         channel.nack(consumeMessage, false);
       }

@@ -23,7 +23,12 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
-
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: blog-mailcatcher
+    ports:
+      - 1080:1080
+      - 1025:1025
 volumes:
   db:
     driver: local
