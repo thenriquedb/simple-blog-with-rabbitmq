@@ -7,8 +7,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "dev": "nx run-many --target=dev --projects=blog-api,email-consumer",
     "dev:blog-api": "nx run blog-api:dev",
-    "dev:email-consumer": "nx run email-consumer:dev"
+    "dev:email-consumer": "nx run email-consumer:dev",
+    "bootstrap": "nx run:blog-api:bootstrap"
   },
   "workspaces": [
     "apps/*"
