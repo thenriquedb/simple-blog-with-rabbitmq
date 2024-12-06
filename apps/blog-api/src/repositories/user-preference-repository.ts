@@ -1,4 +1,5 @@
 import { knex } from "../database/db";
+import { UserPreference } from "../entities/UserPreference";
 
 export interface UserPreferenceData {
   userId: number;
@@ -9,7 +10,7 @@ export interface UserPreferenceData {
 }
 
 export class UserPreferenceRepository {
-  static async create(data: { userId: number, categoryId: number }): Promise<void> {
+  static create(data: { userId: number, categoryId: number }) {
     const { userId, categoryId } = data;
     return knex("user_preferences").insert({
       user_id: userId,
@@ -23,29 +24,22 @@ export class UserPreferenceRepository {
       .first();
   }
 
-  static async getUserPreferencesByUserId(userId: number): Promise<UserPreferenceData[]> {
-    return knex("user_preferences")
-      .join("users", "users.id", "=", "user_preferences.user_id")
-      .join("categories", "categories.id", "=", "user_preferences.category_id")
-      .where({ userId: userId })
-      .select([
-        "user_preferences.id",
-        "category_id",
-        "users.name as userName",
-        "users.email as userEmail",
-        "categories.name as categoryName"
-      ]);
+  static listUserPreferences(userId: number) {
+    return knex<UserPreference>("user_preferences")
+      .where({ user_id: userId })
+      .select();
   }
 
-  static async listUsersByCategory(categoryId: number) {
-    return knex("user_preferences")
+  static listUsersByCategory(categoryId: number) {
+    return knex<UserPreference>("user_preferences")
       .join("users", "users.id", "=", "user_preferences.user_id")
       .join("categories", "categories.id", "=", "user_preferences.category_id")
       .where({ category_id: categoryId })
-      .select([
+      .select<UserPreferenceData>([
         "user_preferences.id",
         "category_id",
         "users.name as userName",
+        "users.id as userId",
         "users.email as userEmail",
         "categories.name as categoryName"
       ]);

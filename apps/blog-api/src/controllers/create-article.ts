@@ -64,7 +64,7 @@ export async function createArticle(request: FastifyRequest<{ Body: ICreateArtic
   if (!category) {
     return reply.status(400).send({
       error: {
-        message: 'Category not found'
+        message: 'Invalid category'
       }
     });
   }
@@ -76,6 +76,7 @@ export async function createArticle(request: FastifyRequest<{ Body: ICreateArtic
   });
 
   const channel = await getRabbitMQInstance();
+  const preview = content.length > 100 ? `${content.slice(0, 100)}...` : content;
 
   channel.publishInExchange(
     'ex.blog.articles',
@@ -83,7 +84,7 @@ export async function createArticle(request: FastifyRequest<{ Body: ICreateArtic
     JSON.stringify({
       id: createdArticleId[0],
       title,
-      preview: content.length > 100 ? `${content.slice(0, 100)}...` : content,
+      preview,
       category_id: category.id
     }),
     {

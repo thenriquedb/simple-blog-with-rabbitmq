@@ -64,7 +64,7 @@ export async function createUserPreference(request: FastifyRequest<{ Body: ICrea
   const userPreference = await UserPreferenceRepository.findByUserIdAndCategoryId(userId, categoryId);
 
   if (userPreference) {
-    return reply.status(400).send({
+    return reply.status(409).send({
       error: {
         message: 'User preference already exists'
       }

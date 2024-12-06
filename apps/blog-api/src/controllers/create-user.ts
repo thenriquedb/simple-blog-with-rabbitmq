@@ -42,6 +42,13 @@ export interface ICreateUserBody {
 export async function createUser(request: FastifyRequest<{ Body: ICreateUserBody }>, reply: FastifyReply) {
   const { name, email } = request.body;
 
+  const userExists = await UserRepository.findByEmail(email);
+  if (userExists) {
+    return reply.code(409).send({
+      error: 'A user with this email already exists'
+    });
+  }
+
   const createUserId = await UserRepository.create({ name, email });
 
   const user = await UserRepository.findById(createUserId[0]);

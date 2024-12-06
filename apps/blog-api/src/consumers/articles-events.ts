@@ -1,6 +1,5 @@
 import { getRabbitMQInstance } from '../shared/rabbitMQ';
-import { UserPreferenceData } from '../repositories/user-preference-repository';
-import { knex } from '../database/db';
+import { UserPreferenceData, UserPreferenceRepository } from '../repositories/user-preference-repository';
 
 export async function articleEventsConsumer() {
   const channel = await getRabbitMQInstance()
@@ -11,19 +10,7 @@ export async function articleEventsConsumer() {
       const articleTitle = parsedContent.title;
       const categoryId = message?.properties?.headers?.['x-category-id'] as number;
 
-      const stream = knex("user_preferences")
-        .join("users", "users.id", "=", "user_preferences.user_id")
-        .join("categories", "categories.id", "=", "user_preferences.category_id")
-        .where({ category_id: categoryId })
-        .select<UserPreferenceData>([
-          "user_preferences.id",
-          "category_id",
-          "users.name as userName",
-          "users.id as userId",
-          "users.email as userEmail",
-          "categories.name as categoryName"
-        ])
-        .stream();
+      const stream = UserPreferenceRepository.listUsersByCategory(categoryId).stream();
 
       stream.on('data', async (row: UserPreferenceData) => {
         await channel.publishInExchange(

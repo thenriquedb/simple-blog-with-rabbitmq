@@ -19,7 +19,6 @@ export async function emailConsumer() {
         channel.ack(consumeMessage);
         console.log('Email sent to ' + info.envelope.to);
       } catch (error) {
-        console.log('Error sending email', error);
         console.error('Error sending email', error.message);
         channel.nack(consumeMessage, false);
       }

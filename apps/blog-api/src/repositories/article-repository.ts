@@ -2,25 +2,25 @@ import { knex } from "../database/db";
 import { Article } from "../entities/Article";
 
 export class ArticleRepository {
-  static async create(data: { title: string, content: string, categoryId: number }): Promise<number[]> {
+  static create(data: { title: string, content: string, categoryId: number }) {
     const { categoryId, content, title } = data;
 
-    return knex('articles').insert({
+    return knex<Article>('articles').insert({
       title,
       content,
       category_id: categoryId
     });
   }
 
-  static async findAll(): Promise<Article[]> {
-    return knex('articles').select('*');
+  static findAll() {
+    return knex<Article>('articles').select('*');
   }
 
-  static async findByCategoryId(categoryId: number): Promise<Article[]> {
-    return knex('articles').where({ category_id: categoryId });
+  static findByCategoryId(categoryId: number) {
+    return knex<Article>('articles').where({ category_id: categoryId });
   }
 
-  static async findById(id: number): Promise<Article> {
-    return knex('articles').where({ id }).first();
+  static findById(id: number) {
+    return knex<Article>('articles').where({ id }).first();
   }
 }
