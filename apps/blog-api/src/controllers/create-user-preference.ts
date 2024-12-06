@@ -4,6 +4,8 @@ import { UserPreferenceRepository, } from "../repositories/user-preference-repos
 import { CategoryRepository } from "../repositories/category-repository";
 
 export const createUserPreferenceSchema: FastifySchema = {
+  description: 'Create a user preference',
+  tags: ['UserPreference'],
   body: {
     type: 'object',
     properties: {
@@ -11,6 +13,23 @@ export const createUserPreferenceSchema: FastifySchema = {
       categoryId: { type: 'number' }
     },
     required: ['userId', 'categoryId']
+  },
+  response: {
+    200: {
+      description: 'User preference created',
+    },
+    400: {
+      description: 'Bad request',
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -56,4 +75,6 @@ export async function createUserPreference(request: FastifyRequest<{ Body: ICrea
     userId,
     categoryId
   });
+
+  return reply.status(200);
 }

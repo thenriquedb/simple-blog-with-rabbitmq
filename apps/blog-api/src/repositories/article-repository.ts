@@ -16,6 +16,10 @@ export class ArticleRepository {
     return knex('articles').select('*');
   }
 
+  static async findByCategoryId(categoryId: number): Promise<Article[]> {
+    return knex('articles').where({ category_id: categoryId });
+  }
+
   static async findById(id: number): Promise<Article> {
     return knex('articles').where({ id }).first();
   }

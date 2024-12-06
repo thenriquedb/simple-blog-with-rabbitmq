@@ -10,6 +10,8 @@ type ICreateArticleBody = {
 }
 
 export const createArticleSchema: FastifySchema = {
+  description: 'Create an article',
+  tags: ['Article'],
   body: {
     type: 'object',
     properties: {
@@ -18,6 +20,39 @@ export const createArticleSchema: FastifySchema = {
       categoryId: { type: 'number' },
     },
     required: ['title', 'content', 'categoryId']
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            article: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                title: { type: 'string' },
+                content: { type: 'string' },
+                category_id: { type: 'number' }
+              }
+            }
+          }
+        }
+      }
+    },
+    400: {
+      type: 'object',
+      properties: {
+        error: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          }
+        }
+      }
+    }
   }
 }
 

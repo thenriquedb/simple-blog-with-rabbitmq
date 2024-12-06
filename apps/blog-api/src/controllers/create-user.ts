@@ -2,12 +2,34 @@ import { FastifyReply, FastifyRequest, FastifySchema } from "fastify";
 import { UserRepository } from "../repositories/user-repository";
 
 export const createUserSchema: FastifySchema = {
+  description: 'Create a user',
+  tags: ['User'],
   body: {
     type: 'object',
     required: ['name', 'email'],
     properties: {
       name: { type: 'string' },
       email: { type: 'string' }
+    }
+  },
+  response: {
+    201: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'object',
+          properties: {
+            user: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                name: { type: 'string' },
+                email: { type: 'string' }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
